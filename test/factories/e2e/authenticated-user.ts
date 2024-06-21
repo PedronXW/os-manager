@@ -16,7 +16,6 @@ const createAuthenticatedUserOrganizer =
     const user = await request(app).post('/users').send({
       name: faker.person.firstName(),
       email: faker.internet.email(),
-      type: 'ORGANIZER',
       password,
     })
 
@@ -39,7 +38,6 @@ const createAuthenticatedUserParticipant =
     const user = await request(app).post('/users').send({
       name: faker.person.firstName(),
       email: faker.internet.email(),
-      type: 'PARTICIPANT',
       password,
     })
 

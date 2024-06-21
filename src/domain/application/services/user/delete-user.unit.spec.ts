@@ -1,7 +1,7 @@
 import { User } from '@/domain/enterprise/entities/user'
 import { InMemoryCacheRepository } from 'test/cache/InMemoryCacheRepository'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserNonExistsError } from '../../errors/UserNonExists'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { DeleteUserService } from './delete-user'
 
 let sut: DeleteUserService
@@ -18,7 +18,6 @@ describe('DeleteUser', () => {
   it('should be able to delete a user', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
     })
 
@@ -33,7 +32,6 @@ describe('DeleteUser', () => {
   it('should be able to not delete a user because a wrong id', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
     })
 

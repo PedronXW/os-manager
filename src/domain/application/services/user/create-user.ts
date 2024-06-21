@@ -1,13 +1,12 @@
 import { Either, left, right } from '@/@shared/either'
-import { User, UserTypes } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user'
 import { HashGenerator } from '../../criptography/hash-generator'
-import { UserAlreadyExistsError } from '../../errors/UserAlreadyExistsError'
+import { UserAlreadyExistsError } from '../../errors/user-already-exists-error'
 import { UserRepository } from '../../repositories/user-repository'
 
 interface CreateUserServiceRequest {
   name: string
   email: string
-  type: UserTypes
   password: string
 }
 
@@ -22,7 +21,6 @@ export class CreateUserService {
   async execute({
     name,
     email,
-    type,
     password,
   }: CreateUserServiceRequest): Promise<CreateUserServiceResponse> {
     const userExists = await this.userRepository.getUserByEmail(email)
@@ -36,7 +34,6 @@ export class CreateUserService {
     const user = User.create({
       name,
       email,
-      type,
       password: hashedPassword,
     })
 

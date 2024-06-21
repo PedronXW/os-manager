@@ -9,12 +9,10 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   JWT_SECRET: z.string(),
   RESET_PASSWORD_SECRET: z.string(),
-  DATABASE_URL: z.string(),
   REDIS_HOST: z.string().optional().default('redis'),
   REDIS_PORT: z.coerce.number().optional().default(6379),
   MONGO_URL_PRODUCTION: z.string(),
   MONGO_URL_DEVELOPMENT: z.string(),
-  MONGO_URL_TEST: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)

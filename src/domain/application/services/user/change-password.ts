@@ -2,8 +2,8 @@ import { Either, left, right } from '@/@shared/either'
 import { User } from '@/domain/enterprise/entities/user'
 import { HashComparer } from '../../criptography/hash-comparer'
 import { HashGenerator } from '../../criptography/hash-generator'
-import { UserNonExistsError } from '../../errors/UserNonExists'
-import { WrongCredentialError } from '../../errors/WrongCredentialsError'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
+import { WrongCredentialError } from '../../errors/wrong-credentials-error'
 import { UserRepository } from '../../repositories/user-repository'
 
 type ChangePasswordServiceResponse = Either<UserNonExistsError, User>
@@ -35,7 +35,7 @@ export class ChangePasswordService {
       return left(new WrongCredentialError())
     }
 
-    const editResult = await this.userRepository.changePassword(
+    const editResult = await this.userRepository.changeUserPassword(
       id,
       await this.hashGenerator.hash(newPassword),
     )

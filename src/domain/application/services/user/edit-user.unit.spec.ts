@@ -1,6 +1,6 @@
 import { User } from '@/domain/enterprise/entities/user'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserNonExistsError } from '../../errors/UserNonExists'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { EditUserService } from './edit-user'
 
 let sut: EditUserService
@@ -15,7 +15,6 @@ describe('EditUser', () => {
   it('should be able to edit a user', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
     })
 
@@ -30,7 +29,6 @@ describe('EditUser', () => {
   it('should be able to not edit a user because a wrong id', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
     })
 

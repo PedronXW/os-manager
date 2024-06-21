@@ -2,7 +2,7 @@ import { User } from '@/domain/enterprise/entities/user'
 import { Crypto } from '@/infra/cryptography/crypto'
 import { Encrypter } from '@/infra/cryptography/encrypter'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { WrongCredentialError } from '../../errors/WrongCredentialsError'
+import { WrongCredentialError } from '../../errors/wrong-credentials-error'
 import { AuthenticateUserService } from './authenticate-user'
 
 let sut: AuthenticateUserService
@@ -21,7 +21,6 @@ describe('AuthenticateUser', () => {
   it('should be able to authenticate a user', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })
@@ -41,7 +40,6 @@ describe('AuthenticateUser', () => {
   it('should be able to return a wrong credential error caused by a wrong password', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })
@@ -60,7 +58,6 @@ describe('AuthenticateUser', () => {
   it('should be able to return a wrong credential error caused by a wrong email', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })

@@ -1,7 +1,7 @@
 import { Either, left, right } from '@/@shared/either'
 import { env } from '@/infra/env'
 import { Encrypter } from '../../criptography/encrypter'
-import { UserNonExistsError } from '../../errors/UserNonExists'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { UserRepository } from '../../repositories/user-repository'
 
 interface SendResetPasswordServiceRequest {

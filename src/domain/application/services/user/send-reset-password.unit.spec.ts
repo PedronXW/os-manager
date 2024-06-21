@@ -3,7 +3,7 @@ import { Crypto } from '@/infra/cryptography/crypto'
 import { Encrypter } from '@/infra/cryptography/encrypter'
 import { env } from '@/infra/env'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserNonExistsError } from '../../errors/UserNonExists'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { SendResetPasswordService } from './send-reset-password'
 
 let sut: SendResetPasswordService
@@ -21,7 +21,6 @@ describe('SendResetPassword', () => {
   it('should be able to send a reset password email', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })
@@ -44,7 +43,6 @@ describe('SendResetPassword', () => {
   it('should not be able to send a reset password email because a invalid email', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })

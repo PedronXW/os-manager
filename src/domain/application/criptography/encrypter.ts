@@ -1,6 +1,4 @@
-import { UserTypes } from '@/domain/enterprise/entities/user';
-
-export type IPayload = { id: string; type: UserTypes }
+export type IPayload = { id: string }
 
 export abstract class Encrypter {
   abstract encrypt(

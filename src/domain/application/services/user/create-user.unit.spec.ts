@@ -1,7 +1,7 @@
 import { User } from '@/domain/enterprise/entities/user'
 import { Crypto } from '@/infra/cryptography/crypto'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserAlreadyExistsError } from '../../errors/UserAlreadyExistsError'
+import { UserAlreadyExistsError } from '../../errors/user-already-exists-error'
 import { CreateUserService } from './create-user'
 
 let sut: CreateUserService
@@ -19,7 +19,6 @@ describe('CreateUser', () => {
     const result = await sut.execute({
       name: 'any_name',
       email: 'any_email@gmail.com',
-      type: 'PARTICIPANT',
       password: 'any_password',
     })
 
@@ -31,7 +30,6 @@ describe('CreateUser', () => {
     const user = User.create({
       name: 'any_name',
       email: 'anyemail@email.com',
-      type: 'PARTICIPANT',
       password: 'any_password',
     })
 
@@ -40,7 +38,6 @@ describe('CreateUser', () => {
     const result = await sut.execute({
       name: 'any_name',
       email: 'anyemail@email.com',
-      type: 'PARTICIPANT',
       password: 'any_password',
     })
 

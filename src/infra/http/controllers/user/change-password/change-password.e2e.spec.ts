@@ -7,7 +7,6 @@ describe('Change Password', () => {
     await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 
@@ -32,7 +31,6 @@ describe('Change Password', () => {
     await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 

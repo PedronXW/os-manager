@@ -1,6 +1,6 @@
 import { Either, left, right } from '@/@shared/either'
 import { CacheRepository } from '../../cache/cache-repository'
-import { UserNonExistsError } from '../../errors/UserNonExists'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { UserRepository } from '../../repositories/user-repository'
 
 type DeleteUserServiceRequest = {

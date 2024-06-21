@@ -1,8 +1,8 @@
 import { User } from '@/domain/enterprise/entities/user'
 import { Crypto } from '@/infra/cryptography/crypto'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserNonExistsError } from '../../errors/UserNonExists'
-import { WrongCredentialError } from '../../errors/WrongCredentialsError'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
+import { WrongCredentialError } from '../../errors/wrong-credentials-error'
 import { ChangePasswordService } from './change-password'
 
 let sut: ChangePasswordService
@@ -19,7 +19,6 @@ describe('ChangePassword', () => {
   it('should be able to change a user password', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })
@@ -45,7 +44,6 @@ describe('ChangePassword', () => {
     const user = User.create({
       name: 'any_name',
       email: 'any_email@gmail.com',
-      type: 'PARTICIPANT',
       password: await crypto.hash('any_password'),
     })
 

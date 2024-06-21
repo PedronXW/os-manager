@@ -1,4 +1,4 @@
-import { WrongCredentialError } from '@/domain/application/errors/WrongCredentialsError'
+import { WrongCredentialError } from '@/domain/application/errors/wrong-credentials-error'
 import request from 'supertest'
 import { app } from '../../../app'
 
@@ -7,7 +7,6 @@ describe('Authentication', () => {
     await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 
@@ -26,7 +25,6 @@ describe('Authentication', () => {
     await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 
@@ -45,7 +43,6 @@ describe('Authentication', () => {
     await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 

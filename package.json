@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test-unit": "jest --config ./jest.config.json  --runInBand",
-    "test-e2e": "jest --config ./jest-e2e.config.json  --runInBand",
+    "test:unit": "jest --config ./test/jest.config.json  --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.config.json  --runInBand",
     "test:watch": "jest --watchAll",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -23,7 +23,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "@faker-js/faker": "github:faker-js/faker",
+    "@faker-js/faker": "8.4.1",
     "@rocketseat/eslint-config": "2.2.2",
     "@types/amqplib": "0.10.5",
     "@types/bcryptjs": "2.4.6",
@@ -45,6 +45,7 @@
     "mongodb": "6.7.0",
     "supertest": "7.0.0",
     "swagger-ui-express": "5.0.1",
+    "ts-jest": "29.1.4",
     "zod": "3.23.8"
   }
 }
