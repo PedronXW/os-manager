@@ -3,7 +3,7 @@ import { Crypto } from '@/infra/cryptography/crypto'
 import { Encrypter } from '@/infra/cryptography/encrypter'
 import { env } from '@/infra/env'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserNonExistsError } from '../../errors/UserNonExists'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { ResetUserPasswordService } from './reset-user-password'
 
 let sut: ResetUserPasswordService

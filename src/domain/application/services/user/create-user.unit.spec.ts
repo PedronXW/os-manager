@@ -1,7 +1,7 @@
 import { User } from '@/domain/enterprise/entities/user'
 import { Crypto } from '@/infra/cryptography/crypto'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserAlreadyExistsError } from '../../errors/UserAlreadyExistsError'
+import { UserAlreadyExistsError } from '../../errors/user-already-exists-error'
 import { CreateUserService } from './create-user'
 
 let sut: CreateUserService

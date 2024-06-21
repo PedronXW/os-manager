@@ -49,12 +49,3 @@ services:
       - RABBITMQ_DEFAULT_USER = admin
       - RABBITMQ_DEFAULT_PASS = passw123
     restart: always
-
-  mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    volumes:
-      - ./data:/data/db

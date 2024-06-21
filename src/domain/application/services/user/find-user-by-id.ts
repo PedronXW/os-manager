@@ -1,6 +1,6 @@
 import { Either, left, right } from '@/@shared/either'
 import { User } from '@/domain/enterprise/entities/user'
-import { UserNonExistsError } from '../../errors/UserNonExists'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { UserRepository } from '../../repositories/user-repository'
 
 type FindUserByIdServiceRequest = {

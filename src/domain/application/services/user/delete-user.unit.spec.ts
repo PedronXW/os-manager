@@ -1,7 +1,7 @@
 import { User } from '@/domain/enterprise/entities/user'
 import { InMemoryCacheRepository } from 'test/cache/InMemoryCacheRepository'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserNonExistsError } from '../../errors/UserNonExists'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { DeleteUserService } from './delete-user'
 
 let sut: DeleteUserService

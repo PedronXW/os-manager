@@ -1,8 +1,8 @@
 import { Either, left, right } from '@/@shared/either'
 import { Encrypter } from '../../criptography/encrypter'
 import { HashComparer } from '../../criptography/hash-comparer'
-import { InactiveUserError } from '../../errors/InactiveUserError'
-import { WrongCredentialError } from '../../errors/WrongCredentialsError'
+import { InactiveUserError } from '../../errors/inactive-user-error'
+import { WrongCredentialError } from '../../errors/wrong-credentials-error'
 import { UserRepository } from '../../repositories/user-repository'
 
 type AuthenticateUserServiceRequest = {

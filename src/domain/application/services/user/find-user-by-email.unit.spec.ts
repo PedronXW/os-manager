@@ -1,6 +1,6 @@
 import { User } from '@/domain/enterprise/entities/user'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserNonExistsError } from '../../errors/UserNonExists'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { FindUserByEmailService } from './find-user-by-email'
 
 let sut: FindUserByEmailService

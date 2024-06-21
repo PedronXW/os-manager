@@ -1,4 +1,4 @@
-import { WrongCredentialError } from '@/domain/application/errors/WrongCredentialsError'
+import { WrongCredentialError } from '@/domain/application/errors/wrong-credentials-error'
 import request from 'supertest'
 import { app } from '../../../app'
 

@@ -1,8 +1,8 @@
 import { User } from '@/domain/enterprise/entities/user'
 import { Crypto } from '@/infra/cryptography/crypto'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { UserNonExistsError } from '../../errors/UserNonExists'
-import { WrongCredentialError } from '../../errors/WrongCredentialsError'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
+import { WrongCredentialError } from '../../errors/wrong-credentials-error'
 import { ChangePasswordService } from './change-password'
 
 let sut: ChangePasswordService

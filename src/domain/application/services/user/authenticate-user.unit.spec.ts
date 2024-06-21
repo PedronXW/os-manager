@@ -2,7 +2,7 @@ import { User } from '@/domain/enterprise/entities/user'
 import { Crypto } from '@/infra/cryptography/crypto'
 import { Encrypter } from '@/infra/cryptography/encrypter'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { WrongCredentialError } from '../../errors/WrongCredentialsError'
+import { WrongCredentialError } from '../../errors/wrong-credentials-error'
 import { AuthenticateUserService } from './authenticate-user'
 
 let sut: AuthenticateUserService

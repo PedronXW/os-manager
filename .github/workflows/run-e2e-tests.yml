@@ -1,0 +1,29 @@
+name: Run E2E Tests
+
+on: [push]
+
+jobs:
+  run-e2e-tests:
+    name: Run E2E Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - run: npm ci
+
+      - run: npm run test:e2e
+        env:
+          JWT_SECRET: secret
+          RESET_PASSWORD_SECRET: secret
+          REDIS_URL: redis://redis:6379
+          REDIS_HOST: redis
+          REDIS_PORT: 6379
+          EMAIL_USERNAME: 7c120fba39e28b
+          EMAIL_PASSWORD: 80ac73b879dcf6
+          EMAIL_PORT: 2525
+          EMAIL_HOST: sandbox.smtp.mailtrap.io
