@@ -6,7 +6,6 @@ describe('Create User', () => {
     const response = await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 
@@ -14,7 +13,6 @@ describe('Create User', () => {
     expect(response.body).toEqual({
       id: expect.any(String),
       name: 'John Doe',
-      type: 'ORGANIZER',
       email: 'johndoe@johndoe.com',
       createdAt: expect.any(String),
       updatedAt: null,
@@ -25,14 +23,12 @@ describe('Create User', () => {
     await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 
     const response = await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 
@@ -46,7 +42,6 @@ describe('Create User', () => {
     const response = await request(app).post('/users').send({
       name: 'J',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 
@@ -60,7 +55,6 @@ describe('Create User', () => {
     const response = await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@johndoe.com',
-      type: 'ORGANIZER',
       password: '123',
     })
 
@@ -74,29 +68,12 @@ describe('Create User', () => {
     const response = await request(app).post('/users').send({
       name: 'John Doe',
       email: 'johndoe',
-      type: 'ORGANIZER',
       password: '12345678',
     })
 
     expect(response.status).toBe(400)
     expect(response.body).toEqual({
       error: ['email - Invalid email'],
-    })
-  })
-
-  it('should not be able to create a user because a invalid type', async () => {
-    const response = await request(app).post('/users').send({
-      name: 'John Doe',
-      email: 'johndoe@any.com',
-      type: 'ANYTHING',
-      password: '12345678',
-    })
-
-    expect(response.status).toBe(400)
-    expect(response.body).toEqual({
-      error: [
-        "type - Invalid enum value. Expected 'ORGANIZER' | 'PARTICIPANT', received 'ANYTHING'",
-      ],
     })
   })
 })

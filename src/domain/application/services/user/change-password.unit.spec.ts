@@ -19,7 +19,6 @@ describe('ChangePassword', () => {
   it('should be able to change a user password', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })
@@ -45,7 +44,6 @@ describe('ChangePassword', () => {
     const user = User.create({
       name: 'any_name',
       email: 'any_email@gmail.com',
-      type: 'PARTICIPANT',
       password: await crypto.hash('any_password'),
     })
 

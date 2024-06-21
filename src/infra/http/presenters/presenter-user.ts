@@ -6,7 +6,6 @@ export class UserPresenter {
       id: user.id.getValue(),
       name: user.name,
       email: user.email,
-      type: user.type,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }

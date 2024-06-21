@@ -23,7 +23,6 @@ describe('Reset User Password', () => {
   it('should not be able to reset a user password because a invalid signature jwt', async () => {
     await request(app).post('/users').send({
       name: 'John Doe',
-      type: 'ORGANIZER',
       email: 'johndoe@johndoe.com',
       password: '12345678',
     })
@@ -44,7 +43,6 @@ describe('Reset User Password', () => {
   it('should not be able to reset a user password because a invalid id', async () => {
     await request(app).post('/users').send({
       name: 'John Doe',
-      type: 'ORGANIZER',
       email: 'johndoe@johndoe.com',
       password: '12345678',
     })

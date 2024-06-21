@@ -28,6 +28,17 @@ export class MongoConnection {
     return newCollection
   }
 
+  async createDatabase(dbName: string) {
+    const database = this.client.db(dbName)
+    return database
+  }
+
+  async dropCollection(dbName: string, collectionName: string) {
+    const database = this.client.db(dbName)
+    const collection = database.collection(collectionName)
+    await collection.drop()
+  }
+
   async getDatabase(dbName: string) {
     const database = this.client.db(dbName)
     return database

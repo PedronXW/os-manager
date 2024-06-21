@@ -15,7 +15,6 @@ describe('Find User By Email', () => {
   it('should be able to find a user by email', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
     })
 
@@ -30,7 +29,6 @@ describe('Find User By Email', () => {
   it('should be able to not find a user by email because a wrong email', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
     })
 

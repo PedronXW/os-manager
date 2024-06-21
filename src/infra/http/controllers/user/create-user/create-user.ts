@@ -6,7 +6,6 @@ import { z } from 'zod'
 const createUserZodSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
-  type: z.enum(['ORGANIZER', 'PARTICIPANT']),
   password: z.string().min(8),
 })
 
@@ -14,12 +13,11 @@ export class CreateUserController {
   constructor(private createUserService: CreateUserService) {}
 
   async handle(req, res): Promise<Response> {
-    const { name, email, password, type } = createUserZodSchema.parse(req.body)
+    const { name, email, password } = createUserZodSchema.parse(req.body)
 
     const user = await this.createUserService.execute({
       name,
       email,
-      type,
       password,
     })
 

@@ -21,7 +21,6 @@ describe('AuthenticateUser', () => {
   it('should be able to authenticate a user', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })
@@ -41,7 +40,6 @@ describe('AuthenticateUser', () => {
   it('should be able to return a wrong credential error caused by a wrong password', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })
@@ -60,7 +58,6 @@ describe('AuthenticateUser', () => {
   it('should be able to return a wrong credential error caused by a wrong email', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })

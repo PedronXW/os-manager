@@ -2,16 +2,14 @@ import { Entity } from '../../../@shared/entities/entity'
 import { EntityId } from '../../../@shared/entities/entity-id'
 import { Optional } from '../../../@shared/types/optional'
 
-export type UserTypes = 'ORGANIZER' | 'PARTICIPANT'
-
 type UserProps = {
   name: string
   email: string
-  type: UserTypes
   active: boolean
   password?: string
-  createdAt: Date | null
+  createdAt: Date
   updatedAt?: Date | null
+  deletedAt?: Date | null
 }
 
 export class User extends Entity<UserProps> {
@@ -39,14 +37,6 @@ export class User extends Entity<UserProps> {
     this.props.password = password
   }
 
-  get type(): UserTypes {
-    return this.props.type
-  }
-
-  set type(type: UserTypes) {
-    this.props.type = type
-  }
-
   get active(): boolean {
     return this.props.active
   }
@@ -59,7 +49,7 @@ export class User extends Entity<UserProps> {
     return this.props.createdAt
   }
 
-  set createdAt(createdAt: Date | null) {
+  set createdAt(createdAt: Date) {
     this.props.createdAt = createdAt
   }
 
@@ -71,8 +61,19 @@ export class User extends Entity<UserProps> {
     this.props.updatedAt = updatedAt
   }
 
+  get deletedAt(): Date | null | undefined {
+    return this.props.deletedAt
+  }
+
+  set deletedAt(deletedAt: Date | null | undefined) {
+    this.props.deletedAt = deletedAt
+  }
+
   static create(
-    props: Optional<UserProps, 'createdAt' | 'active'>,
+    props: Optional<
+      UserProps,
+      'createdAt' | 'active' | 'deletedAt' | 'updatedAt'
+    >,
     id?: EntityId,
   ): User {
     const user = new User(
@@ -81,6 +82,7 @@ export class User extends Entity<UserProps> {
         active: props.active ?? true,
         createdAt: props.createdAt ?? new Date(),
         updatedAt: props.updatedAt ?? null,
+        deletedAt: props.deletedAt ?? null,
       },
       id,
     )

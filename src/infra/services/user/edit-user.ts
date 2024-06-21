@@ -1,7 +1,9 @@
 import { EditUserService } from '@/domain/application/services/user/edit-user'
-import { PrismaUserRepository } from '@/infra/database/repositories/prisma-user-repository'
+import { MongoConnection } from '@/infra/database/mongo-connection'
+import { MongoUserRepository } from '@/infra/database/repositories/MongoUserRepository'
 
-const usersRepository = new PrismaUserRepository()
-const editUserService = new EditUserService(usersRepository)
+const mongoConnection = new MongoConnection()
+const userRepository = new MongoUserRepository(mongoConnection)
+const editUserService = new EditUserService(userRepository)
 
 export { editUserService }

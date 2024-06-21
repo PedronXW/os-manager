@@ -47,7 +47,6 @@ export class AuthenticateUserService {
 
     const token = await this.encrypter.encrypt({
       id: user.id.getValue(),
-      type: user.type,
     })
 
     return right({ token })

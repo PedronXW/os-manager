@@ -21,7 +21,6 @@ describe('SendResetPassword', () => {
   it('should be able to send a reset password email', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })
@@ -44,7 +43,6 @@ describe('SendResetPassword', () => {
   it('should not be able to send a reset password email because a invalid email', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
       password: await crypto.hash('any_password'),
     })

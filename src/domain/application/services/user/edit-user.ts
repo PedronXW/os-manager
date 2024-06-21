@@ -15,7 +15,9 @@ export class EditUserService {
       return left(new UserNonExistsError())
     }
 
-    const updatedUser = await this.userRepository.editUser(id, name)
+    user.name = name
+
+    const updatedUser = await this.userRepository.editUser(id, user)
 
     return right(updatedUser)
   }

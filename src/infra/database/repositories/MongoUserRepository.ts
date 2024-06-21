@@ -1,117 +1,138 @@
-import {
-  ClientRepository,
-  EditClient,
-} from '@/domain/application/repositories/client-repository'
-import { Client } from '@/domain/enterprise/entities/client'
+import { UserRepository } from '@/domain/application/repositories/user-repository'
+import { User } from '@/domain/enterprise/entities/user'
 import { env } from '@/infra/env'
-import { ClientMapper } from '../mappers/client-mapper'
+import { UserMapper } from '../mappers/user-mapper'
 import { MongoConnection } from '../mongo-connection'
 
-export class MongoClientRepository implements ClientRepository {
+export class MongoUserRepository implements UserRepository {
   constructor(private mongoConnection: MongoConnection) {}
 
-  async createClient(client: Client): Promise<Client> {
+  async createUser(user: User): Promise<User> {
     const collection = this.mongoConnection.getCollection(
       'teste',
       env.NODE_ENV === 'test'
-        ? 'teste_' + process.env.COLLECTION_ID
-        : 'clients',
+        ? 'teste_' + process.env.COLLECTION_ID + '_users'
+        : 'users',
     )
 
-    await collection.insertOne(ClientMapper.toPersistence(client))
+    await collection.insertOne(UserMapper.toPersistence(user))
 
-    return client
+    return user
   }
 
-  async deleteClient(id: string): Promise<boolean> {
+  async changeUserPassword(id: string, password: string): Promise<User> {
     const collection = this.mongoConnection.getCollection(
       'teste',
       env.NODE_ENV === 'test'
-        ? 'teste_' + process.env.COLLECTION_ID
-        : 'clients',
+        ? 'teste_' + process.env.COLLECTION_ID + '_users'
+        : 'users',
     )
 
-    const deleteResult = await collection.deleteOne({ id })
-    return deleteResult.deletedCount === 1
-  }
-
-  async editClient(id: string, { name, email }: EditClient): Promise<Client> {
-    const collection = this.mongoConnection.getCollection(
-      'teste',
-      env.NODE_ENV === 'test'
-        ? 'teste_' + process.env.COLLECTION_ID
-        : 'clients',
-    )
-
-    const newClient = collection.updateOne(
+    await collection.updateOne(
       { id },
       {
         $set: {
-          name,
-          email,
+          password,
         },
       },
     )
 
-    return ClientMapper.toDomain(newClient)
+    const user = await collection.findOne({ id })
+
+    return UserMapper.toDomain(user)
   }
 
-  async getClientByEmail(email: string): Promise<Client | null> {
+  async deleteUser(id: string): Promise<boolean> {
     const collection = this.mongoConnection.getCollection(
       'teste',
       env.NODE_ENV === 'test'
-        ? 'teste_' + process.env.COLLECTION_ID
-        : 'clients',
+        ? 'teste_' + process.env.COLLECTION_ID + '_users'
+        : 'users',
     )
 
-    const client = await collection.findOne({ email })
+    const deleteResult = await collection.updateOne(
+      { id },
+      {
+        $set: {
+          active: false,
+          deletedAt: new Date(),
+        },
+      },
+    )
+    return deleteResult.modifiedCount > 0
+  }
 
-    if (!client) {
+  async editUser(id: string, newUser: User): Promise<User> {
+    const collection = this.mongoConnection.getCollection(
+      'teste',
+      env.NODE_ENV === 'test'
+        ? 'teste_' + process.env.COLLECTION_ID + '_users'
+        : 'users',
+    )
+
+    const updatedUser = collection.updateOne(
+      { id },
+      {
+        $set: UserMapper.toPersistence(newUser),
+      },
+    )
+
+    return UserMapper.toDomain(updatedUser)
+  }
+
+  async getUserByEmail(email: string): Promise<User | null> {
+    const collection = this.mongoConnection.getCollection(
+      'teste',
+      env.NODE_ENV === 'test'
+        ? 'teste_' + process.env.COLLECTION_ID + '_users'
+        : 'users',
+    )
+
+    const user = await collection.findOne({ email })
+
+    if (!user) {
       return null
     }
 
-    return ClientMapper.toDomain(client)
+    return UserMapper.toDomain(user)
   }
 
-  async getClientById(id: string): Promise<Client | null> {
+  async getUserById(id: string): Promise<User | null> {
     const collection = this.mongoConnection.getCollection(
       'teste',
       env.NODE_ENV === 'test'
-        ? 'teste_' + process.env.COLLECTION_ID
-        : 'clients',
+        ? 'teste_' + process.env.COLLECTION_ID + '_users'
+        : 'users',
     )
 
-    const client = await collection.findOne({ id })
+    const user = await collection.findOne({ id })
 
-    if (!client) {
+    if (!user) {
       return null
     }
 
-    return ClientMapper.toDomain(client)
+    return UserMapper.toDomain(user)
   }
 
-  async getAllClients(): Promise<Client[]> {
+  async getAllUsers(): Promise<User[]> {
     const collection = this.mongoConnection.getCollection(
       'teste',
       env.NODE_ENV === 'test'
-        ? 'teste_' + process.env.COLLECTION_ID
-        : 'clients',
+        ? 'teste_' + process.env.COLLECTION_ID + '_users'
+        : 'users',
     )
 
-    const clients = await collection.find().toArray()
+    const users = await collection.find().toArray()
 
-    return clients.map((client) => ClientMapper.toDomain(client))
+    return users.map((user) => UserMapper.toDomain(user))
   }
 
-  async changeStatus(
-    id: string,
-    status: 'online' | 'offline',
-  ): Promise<Client> {
+  async changeStatus(id: string, status: 'online' | 'offline'): Promise<User> {
     const collection = this.mongoConnection.getCollection(
       'teste',
       env.NODE_ENV === 'test'
-        ? 'teste_' + process.env.COLLECTION_ID
-        : 'clients',
+        ? 'teste_' + process.env.COLLECTION_ID + '_users'
+        : 'users',
     )
 
     await collection.updateOne(
@@ -123,8 +144,8 @@ export class MongoClientRepository implements ClientRepository {
       },
     )
 
-    const client = await collection.findOne({ id })
+    const user = await collection.findOne({ id })
 
-    return ClientMapper.toDomain(client)
+    return UserMapper.toDomain(user)
   }
 }

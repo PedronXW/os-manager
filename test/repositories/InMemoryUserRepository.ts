@@ -15,7 +15,7 @@ export class InMemoryUserRepository implements UserRepository {
     return user
   }
 
-  async changePassword(id: string, password: string): Promise<User> {
+  async changeUserPassword(id: string, password: string): Promise<User> {
     const userIndex = this.users.findIndex((c) => c.id.getValue() === id)
 
     this.users[userIndex].password = password
@@ -48,14 +48,12 @@ export class InMemoryUserRepository implements UserRepository {
     return true
   }
 
-  async editUser(id: string, name: string): Promise<User> {
+  async editUser(id: string, user: User): Promise<User> {
     const userIndex = this.users.findIndex((c) => c.id.getValue() === id)
 
     if (userIndex === -1) throw new Error('User not found')
 
-    this.users[userIndex].updatedAt = new Date()
-
-    if (name) this.users[userIndex].name = name
+    this.users[userIndex] = user
 
     return this.users[userIndex]
   }

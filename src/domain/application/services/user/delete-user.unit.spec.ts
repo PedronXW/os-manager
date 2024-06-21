@@ -18,7 +18,6 @@ describe('DeleteUser', () => {
   it('should be able to delete a user', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
     })
 
@@ -33,7 +32,6 @@ describe('DeleteUser', () => {
   it('should be able to not delete a user because a wrong id', async () => {
     const user = User.create({
       name: 'any_name',
-      type: 'ORGANIZER',
       email: 'any_email@gmail.com',
     })
 

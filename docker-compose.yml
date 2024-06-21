@@ -17,6 +17,7 @@ services:
       - rabbitmq
     environment:
       JWT_SECRET: secret
+      RESET_PASSWORD_SECRET: secret
       REDIS_URL: redis://redis:6379
       REDIS_HOST: redis
       REDIS_PORT: 6379
@@ -48,3 +49,12 @@ services:
       - RABBITMQ_DEFAULT_USER = admin
       - RABBITMQ_DEFAULT_PASS = passw123
     restart: always
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - ./data:/data/db

@@ -35,7 +35,7 @@ export class ChangePasswordService {
       return left(new WrongCredentialError())
     }
 
-    const editResult = await this.userRepository.changePassword(
+    const editResult = await this.userRepository.changeUserPassword(
       id,
       await this.hashGenerator.hash(newPassword),
     )

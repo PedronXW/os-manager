@@ -1,47 +1,35 @@
-import { env } from '@/infra/env'
-import { PrismaClient } from '@prisma/client'
-import { execSync } from 'child_process'
+import { MongoConnection } from '@/infra/database/mongo-connection'
 import { randomInt } from 'crypto'
-import 'dotenv/config'
-import { Redis } from 'ioredis'
-
-const prisma = new PrismaClient()
-
-process.env.NODE_ENV = 'test'
-
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is not set')
-}
-
-const schemaId = randomInt(999999999).toString()
-
-function generateUniqueDatabaseURL(schemaId: string) {
-  const url = new URL(process.env.DATABASE_URL!)
-  url.searchParams.set('schema', schemaId)
-  return url.toString()
-}
-
-const redis = new Redis({
-  host: env.REDIS_HOST,
-  port: Number(env.REDIS_PORT),
-  db: Number(9),
-})
+import * as matchers from 'jest-extended'
+expect.extend(matchers)
 
 beforeEach(async () => {
-  const databaseURL = generateUniqueDatabaseURL(schemaId)
-
-  process.env.DATABASE_URL = databaseURL
-
-  await redis.flushdb()
-
-  execSync(`export DATABASE_URL=${databaseURL} && npx prisma migrate deploy`)
+  process.env.NODE_ENV = 'test'
+  process.env.COLLECTION_ID = randomInt(10000000).toString()
+  const mongoConnection = new MongoConnection()
+  await mongoConnection.createCollection(
+    'teste',
+    'teste_' + process.env.COLLECTION_ID + '_users',
+  )
 })
 
 afterEach(async () => {
-  await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE`)
-  await prisma.$disconnect()
-})
+  const mongoConnection = new MongoConnection()
+  const db = await mongoConnection.getDatabase('teste')
 
-afterAll(async () => {
-  await redis.quit()
+  const collectionsList = await db.listCollections().toArray()
+
+  const collection = collectionsList.find(
+    (collection) =>
+      collection.name === 'teste_' + process.env.COLLECTION_ID + '_users',
+  )
+
+  if (collection) {
+    await mongoConnection.dropCollection(
+      'teste',
+      'teste_' + process.env.COLLECTION_ID + '_users',
+    )
+  }
+
+  await mongoConnection.disconnect()
 })

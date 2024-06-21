@@ -36,7 +36,7 @@ export class ResetUserPasswordService {
 
     const hashedPassword = await this.hashGenerator.hash(password)
 
-    await this.userRepository.changePassword(translatedId, hashedPassword)
+    await this.userRepository.changeUserPassword(translatedId, hashedPassword)
 
     return right(null)
   }

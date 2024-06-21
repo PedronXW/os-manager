@@ -19,7 +19,7 @@ export class Encrypter implements EncryptInterface {
     token: string,
     factor: string = env.JWT_SECRET,
   ): Promise<IPayload> {
-    const { id, type } = verify(token, factor) as IPayload
-    return { id, type }
+    const { id } = verify(token, factor) as IPayload
+    return { id }
   }
 }
