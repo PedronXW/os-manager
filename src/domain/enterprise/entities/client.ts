@@ -2,11 +2,11 @@ import { Entity } from '@/@shared/entities/entity'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Optional } from '@/@shared/types/optional'
 
-type InstallationProps = {
+type ClientProps = {
   name: string
-  description: string
-  products: EntityId[]
-  client: EntityId
+  contacts: string[]
+  managerName: string
+  email: string
   active: boolean
   createdAt: Date
   createdBy: EntityId
@@ -16,7 +16,7 @@ type InstallationProps = {
   deletedBy?: EntityId | null
 }
 
-export class Installation extends Entity<InstallationProps> {
+export class Client extends Entity<ClientProps> {
   get name(): string {
     return this.props.name
   }
@@ -25,20 +25,28 @@ export class Installation extends Entity<InstallationProps> {
     this.props.name = name
   }
 
-  get description(): string {
-    return this.props.description
+  get contacts(): string[] {
+    return this.props.contacts
   }
 
-  set description(description: string) {
-    this.props.description = description
+  set contacts(contacts: string[]) {
+    this.props.contacts = contacts
   }
 
-  get products(): EntityId[] {
-    return this.props.products
+  get managerName(): string {
+    return this.props.managerName
   }
 
-  set products(products: EntityId[]) {
-    this.props.products = products
+  set managerName(managerName: string) {
+    this.props.managerName = managerName
+  }
+
+  get email(): string {
+    return this.props.email
+  }
+
+  set email(email: string) {
+    this.props.email = email
   }
 
   get active(): boolean {
@@ -99,12 +107,12 @@ export class Installation extends Entity<InstallationProps> {
 
   static create(
     props: Optional<
-      InstallationProps,
+      ClientProps,
       'createdAt' | 'deletedAt' | 'deletedBy' | 'updatedAt' | 'updatedBy'
     >,
     id?: EntityId,
-  ): Installation {
-    return new Installation(
+  ): Client {
+    return new Client(
       {
         ...props,
         active: props.active ?? true,
