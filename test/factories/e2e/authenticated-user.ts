@@ -1,4 +1,4 @@
-import { User } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user/user'
 import { app } from '@/infra/http/app'
 import { faker } from '@faker-js/faker'
 import request from 'supertest'

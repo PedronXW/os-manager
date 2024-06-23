@@ -1,4 +1,4 @@
-import { User } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user/user'
 import { InMemoryCacheRepository } from 'test/cache/InMemoryCacheRepository'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
 import { UserNonExistsError } from '../../errors/user-non-exists-error'
@@ -19,6 +19,7 @@ describe('DeleteUser', () => {
     const user = User.create({
       name: 'any_name',
       email: 'any_email@gmail.com',
+      password: '12345678',
     })
 
     await inMemoryUserRepository.createUser(user)
@@ -33,6 +34,7 @@ describe('DeleteUser', () => {
     const user = User.create({
       name: 'any_name',
       email: 'any_email@gmail.com',
+      password: '12345678',
     })
 
     await inMemoryUserRepository.createUser(user)

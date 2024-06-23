@@ -1,6 +1,6 @@
 import { DomainEvents } from '@/@shared/events/event-dispatcher'
 import { UserRepository } from '@/domain/application/repositories/user-repository'
-import { User } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user/user'
 
 export class InMemoryUserRepository implements UserRepository {
   users: User[] = []
@@ -8,9 +8,9 @@ export class InMemoryUserRepository implements UserRepository {
   async createUser(user: User): Promise<User> {
     this.users.push(user)
 
-    DomainEvents.markAggregateForDispatch(user)
+    DomainEvents.markEntityForDispatch(user)
 
-    DomainEvents.dispatchEventsForAggregate(user.id)
+    DomainEvents.dispatchEventsForEntity(user.id)
 
     return user
   }

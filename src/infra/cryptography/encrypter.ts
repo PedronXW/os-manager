@@ -1,6 +1,6 @@
 import {
-  Encrypter as EncryptInterface,
-  IPayload,
+    Encrypter as EncryptInterface,
+    IPayload,
 } from '@/domain/application/criptography/encrypter'
 import { sign, verify } from 'jsonwebtoken'
 import { env } from '../env'

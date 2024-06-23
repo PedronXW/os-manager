@@ -1,4 +1,4 @@
-import { WorkOrderResult } from '@/domain/enterprise/entities/work-order-result';
+import { WorkOrderResult } from '@/domain/enterprise/entities/work-order-result/work-order-result';
 
 export abstract class WorkOrderResultRepository {
   abstract createWorkOrderResult(

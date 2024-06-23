@@ -1,15 +1,20 @@
 import { Entity } from '@/@shared/entities/entity'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Optional } from '@/@shared/types/optional'
+import { validateSync } from 'class-validator'
+import { EntityType } from '../../events'
+import { CreateEntityEvent } from '../../events/CreateEntityEvent'
+import { InvalidEntityCreatedEvent } from '../../events/InvalidEntityCreatedEvent'
+import { WorkOrderResultValidationRules } from './work-order-result-validator'
 
 type WorkOrderResultProps = {
   workOrderId: EntityId
   workOrderAvaliation?: EntityId | null
-  prize: number
+  price: number
   description: string
   active: boolean
   createdAt: Date
-  createdBy: string
+  createdBy: EntityId
   updatedAt?: Date | null
   updatedBy?: EntityId | null
   deletedBy?: EntityId | null
@@ -33,12 +38,12 @@ export class WorkOrderResult extends Entity<WorkOrderResultProps> {
     this.props.workOrderAvaliation = value
   }
 
-  get prize() {
-    return this.props.prize
+  get price() {
+    return this.props.price
   }
 
-  set prize(value: number) {
-    this.props.prize = value
+  set price(value: number) {
+    this.props.price = value
   }
 
   get description() {
@@ -69,7 +74,7 @@ export class WorkOrderResult extends Entity<WorkOrderResultProps> {
     return this.props.createdBy
   }
 
-  set createdBy(value: string) {
+  set createdBy(value: EntityId) {
     this.props.createdBy = value
   }
 
@@ -118,7 +123,7 @@ export class WorkOrderResult extends Entity<WorkOrderResultProps> {
     >,
     id?: EntityId,
   ): WorkOrderResult {
-    return new WorkOrderResult(
+    const newWorkOrderResult = new WorkOrderResult(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
@@ -126,5 +131,29 @@ export class WorkOrderResult extends Entity<WorkOrderResultProps> {
       },
       id,
     )
+
+    const validatedWorkOrderResult = new WorkOrderResultValidationRules(
+      newWorkOrderResult,
+    )
+
+    const validationError = validateSync(validatedWorkOrderResult)
+
+    if (!id) {
+      newWorkOrderResult.addDomainEvent(
+        new CreateEntityEvent(newWorkOrderResult, EntityType.WORK_ORDER_RESULT),
+      )
+    }
+
+    if (validationError.length > 0) {
+      newWorkOrderResult.addDomainEvent(
+        new InvalidEntityCreatedEvent(
+          newWorkOrderResult,
+          EntityType.WORK_ORDER_RESULT,
+          validationError,
+        ),
+      )
+    }
+
+    return newWorkOrderResult
   }
 }

@@ -1,4 +1,4 @@
-import { WorkOrderAvaliation } from '@/domain/enterprise/entities/work-order-avaliation';
+import { WorkOrderAvaliation } from '@/domain/enterprise/entities/work-order-avaliation/work-order-avaliation';
 
 export abstract class WorkOrderAvaliationRepository {
   abstract createWorkOrderAvaliation(

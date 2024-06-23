@@ -1,12 +1,18 @@
 import { Entity } from '@/@shared/entities/entity'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Optional } from '@/@shared/types/optional'
+import { validateSync } from 'class-validator'
+import { EntityType } from '../../events'
+import { CreateEntityEvent } from '../../events/CreateEntityEvent'
+import { InvalidEntityCreatedEvent } from '../../events/InvalidEntityCreatedEvent'
+import { ClientValidationRules } from './client-validator'
 
-type InstallationProps = {
+type ClientRequest = {
   name: string
-  description: string
-  products: EntityId[]
-  client: EntityId
+  contacts: string[]
+  managerName: string
+  document: string
+  email: string
   active: boolean
   createdAt: Date
   createdBy: EntityId
@@ -16,7 +22,7 @@ type InstallationProps = {
   deletedBy?: EntityId | null
 }
 
-export class Installation extends Entity<InstallationProps> {
+export class Client extends Entity<ClientRequest> {
   get name(): string {
     return this.props.name
   }
@@ -25,20 +31,36 @@ export class Installation extends Entity<InstallationProps> {
     this.props.name = name
   }
 
-  get description(): string {
-    return this.props.description
+  get contacts(): string[] {
+    return this.props.contacts
   }
 
-  set description(description: string) {
-    this.props.description = description
+  set contacts(contacts: string[]) {
+    this.props.contacts = contacts
   }
 
-  get products(): EntityId[] {
-    return this.props.products
+  get managerName(): string {
+    return this.props.managerName
   }
 
-  set products(products: EntityId[]) {
-    this.props.products = products
+  set managerName(managerName: string) {
+    this.props.managerName = managerName
+  }
+
+  get email(): string {
+    return this.props.email
+  }
+
+  set email(email: string) {
+    this.props.email = email
+  }
+
+  get document(): string {
+    return this.props.document
+  }
+
+  set document(document: string) {
+    this.props.document = document
   }
 
   get active(): boolean {
@@ -99,12 +121,17 @@ export class Installation extends Entity<InstallationProps> {
 
   static create(
     props: Optional<
-      InstallationProps,
-      'createdAt' | 'deletedAt' | 'deletedBy' | 'updatedAt' | 'updatedBy'
+      ClientRequest,
+      | 'createdAt'
+      | 'deletedAt'
+      | 'deletedBy'
+      | 'updatedAt'
+      | 'updatedBy'
+      | 'active'
     >,
     id?: EntityId,
-  ): Installation {
-    return new Installation(
+  ): Client {
+    const newClient = new Client(
       {
         ...props,
         active: props.active ?? true,
@@ -112,5 +139,27 @@ export class Installation extends Entity<InstallationProps> {
       },
       id,
     )
+
+    const validatedClient = new ClientValidationRules(newClient)
+
+    const validationError = validateSync(validatedClient)
+
+    if (!id) {
+      newClient.addDomainEvent(
+        new CreateEntityEvent(newClient, EntityType.CLIENT),
+      )
+    }
+
+    if (validationError.length > 0) {
+      newClient.addDomainEvent(
+        new InvalidEntityCreatedEvent(
+          newClient,
+          EntityType.CLIENT,
+          validationError,
+        ),
+      )
+    }
+
+    return newClient
   }
 }

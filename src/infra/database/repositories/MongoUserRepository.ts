@@ -1,5 +1,5 @@
 import { UserRepository } from '@/domain/application/repositories/user-repository'
-import { User } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user/user'
 import { env } from '@/infra/env'
 import { UserMapper } from '../mappers/user-mapper'
 import { MongoConnection } from '../mongo-connection'

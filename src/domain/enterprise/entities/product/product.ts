@@ -1,6 +1,11 @@
 import { Entity } from '@/@shared/entities/entity'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Optional } from '@/@shared/types/optional'
+import { validateSync } from 'class-validator'
+import { EntityType } from '../../events'
+import { CreateEntityEvent } from '../../events/CreateEntityEvent'
+import { InvalidEntityCreatedEvent } from '../../events/InvalidEntityCreatedEvent'
+import { ProductValidationRules } from './product-validator'
 
 type ProductProps = {
   name: string
@@ -126,7 +131,7 @@ export class Product extends Entity<ProductProps> {
     >,
     id?: EntityId,
   ): Product {
-    return new Product(
+    const newProduct = new Product(
       {
         ...props,
         active: props.active ?? true,
@@ -134,5 +139,27 @@ export class Product extends Entity<ProductProps> {
       },
       id,
     )
+
+    const validatedProduct = new ProductValidationRules(newProduct)
+
+    const validationError = validateSync(validatedProduct)
+
+    if (!id) {
+      newProduct.addDomainEvent(
+        new CreateEntityEvent(newProduct, EntityType.PRODUCT),
+      )
+    }
+
+    if (validationError.length > 0) {
+      newProduct.addDomainEvent(
+        new InvalidEntityCreatedEvent(
+          newProduct,
+          EntityType.PRODUCT,
+          validationError,
+        ),
+      )
+    }
+
+    return newProduct
   }
 }

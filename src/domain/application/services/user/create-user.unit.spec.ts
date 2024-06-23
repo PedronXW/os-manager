@@ -1,4 +1,4 @@
-import { User } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user/user'
 import { Crypto } from '@/infra/cryptography/crypto'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
 import { UserAlreadyExistsError } from '../../errors/user-already-exists-error'

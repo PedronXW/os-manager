@@ -1,41 +1,41 @@
-import { AggregateRoot } from '../entities/aggregate-root'
+import { Entity } from '../entities/entity'
 import { EntityId } from '../entities/entity-id'
 import { DomainEvent } from './domain-event'
 import { DomainEvents } from './event-dispatcher'
 
-class CustomAggregateCreated implements DomainEvent {
+class CustomEntityCreated implements DomainEvent {
   public ocurredAt: Date
-  private aggregate: CustomAggregate // eslint-disable-line
+  private entity: CustomEntity // eslint-disable-line
 
-  constructor(aggregate: CustomAggregate) {
-    this.aggregate = aggregate
+  constructor(entity: CustomEntity) {
+    this.entity = entity
     this.ocurredAt = new Date()
   }
 
-  public getAggregateId(): EntityId {
-    return this.aggregate.id
+  public getEntityId(): EntityId {
+    return this.entity.id
   }
 }
 
-class CustomAggregate extends AggregateRoot<null> {
+class CustomEntity extends Entity<null> {
   static create() {
-    const aggregate = new CustomAggregate(null)
+    const entity = new CustomEntity(null)
 
-    aggregate.addDomainEvent(new CustomAggregateCreated(aggregate))
+    entity.addDomainEvent(new CustomEntityCreated(entity))
 
-    return aggregate
+    return entity
   }
 }
 
 describe('domain events', () => {
   it('should be able to dispatch and listen to events', async () => {
     const callbackSpy = jest.fn()
-    DomainEvents.register(callbackSpy, CustomAggregateCreated.name)
-    const aggregate = CustomAggregate.create()
-    DomainEvents.markAggregateForDispatch(aggregate)
-    expect(aggregate.domainEvents).toHaveLength(1)
-    DomainEvents.dispatchEventsForAggregate(aggregate.id)
+    DomainEvents.register(callbackSpy, CustomEntityCreated.name)
+    const entity = CustomEntity.create()
+    DomainEvents.markEntityForDispatch(entity)
+    expect(entity.domainEvents).toHaveLength(1)
+    DomainEvents.dispatchEventsForEntity(entity.id)
     expect(callbackSpy).toHaveBeenCalled()
-    expect(aggregate.domainEvents).toHaveLength(0)
+    expect(entity.domainEvents).toHaveLength(0)
   })
 })

@@ -1,4 +1,4 @@
-import { User } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user/user'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
 import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { FindUserByEmailService } from './find-user-by-email'
@@ -16,6 +16,7 @@ describe('Find User By Email', () => {
     const user = User.create({
       name: 'any_name',
       email: 'any_email@gmail.com',
+      password: '12345678',
     })
 
     await inMemoryUserRepository.createUser(user)
@@ -30,6 +31,7 @@ describe('Find User By Email', () => {
     const user = User.create({
       name: 'any_name',
       email: 'any_email@gmail.com',
+      password: '12345678',
     })
 
     await inMemoryUserRepository.createUser(user)

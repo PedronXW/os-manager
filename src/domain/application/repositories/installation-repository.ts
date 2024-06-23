@@ -1,4 +1,4 @@
-import { Installation } from '@/domain/enterprise/entities/installation';
+import { Installation } from '@/domain/enterprise/entities/installation/installation';
 
 export abstract class InstallationRepository {
   abstract createInstallation(installation: Installation): Promise<Installation>

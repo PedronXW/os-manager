@@ -1,5 +1,5 @@
 import { Either, left, right } from '@/@shared/either'
-import { User } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user/user'
 import { UserNonExistsError } from '../../errors/user-non-exists-error'
 import { UserRepository } from '../../repositories/user-repository'
 
