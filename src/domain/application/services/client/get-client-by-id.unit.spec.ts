@@ -1,24 +1,31 @@
+import { EntityId } from '@/@shared/entities/entity-id'
 import { Client } from '@/domain/enterprise/entities/client/client'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
-import { CreateClientService } from './create-client'
+import { GetClientByIdService } from './get-client-by-id'
 
-describe('CreateClient', () => {
-  let sut: CreateClientService
+describe('GetClientByID', () => {
+  let sut: GetClientByIdService
   let clientRepository: InMemoryClientRepository
 
   beforeEach(() => {
     clientRepository = new InMemoryClientRepository()
-    sut = new CreateClientService(clientRepository)
+    sut = new GetClientByIdService(clientRepository)
   })
 
-  it('should create a client', async () => {
-    const response = await sut.execute({
+  it('should be able to get a client by id', async () => {
+    const client = Client.create({
       name: 'Client Name',
       email: 'clientemail@email.com',
       managerName: 'Manager Name',
       document: '123456789',
       contacts: ['contact1', 'contact2'],
-      creatorId: 'creatorId',
+      createdBy: new EntityId('creatorId'),
+    })
+
+    clientRepository.createClient(client)
+
+    const response = await sut.execute({
+      id: client.id.getValue(),
     })
 
     expect(response.isRight()).toBeTruthy()

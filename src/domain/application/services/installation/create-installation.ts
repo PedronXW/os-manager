@@ -1,10 +1,9 @@
 import { Either, left, right } from '@/@shared/either'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Client } from '@/domain/enterprise/entities/client/client'
-import { ClientAlreadyExistsError } from '../../errors/client-already-exists-error'
 import { ClientRepository } from '../../repositories/client-repository'
 
-type CreateClientServiceRequest = {
+type CreateClientRequest = {
   name: string
   email: string
   managerName: string
@@ -13,9 +12,9 @@ type CreateClientServiceRequest = {
   creatorId: string
 }
 
-type CreateClientServiceResponse = Either<ClientAlreadyExistsError, Client>
+type CreateClientResponse = Either<Error, Client>
 
-export class CreateClientService {
+export class CreateClient {
   constructor(private clientRepository: ClientRepository) {}
 
   async execute({
@@ -25,12 +24,12 @@ export class CreateClientService {
     document,
     contacts,
     creatorId,
-  }: CreateClientServiceRequest): Promise<CreateClientServiceResponse> {
+  }: CreateClientRequest): Promise<CreateClientResponse> {
     const clientExists =
       await this.clientRepository.getClientByExactlyDocument(document)
 
     if (clientExists) {
-      return left(new ClientAlreadyExistsError())
+      return left(new Error('Client already exists'))
     }
 
     const client = Client.create({

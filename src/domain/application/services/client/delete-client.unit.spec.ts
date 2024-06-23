@@ -1,28 +1,32 @@
+import { EntityId } from '@/@shared/entities/entity-id'
 import { Client } from '@/domain/enterprise/entities/client/client'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
-import { CreateClientService } from './create-client'
+import { DeleteClientService } from './delete-client'
 
-describe('CreateClient', () => {
-  let sut: CreateClientService
+describe('DeleteClient', () => {
+  let sut: DeleteClientService
   let clientRepository: InMemoryClientRepository
 
   beforeEach(() => {
     clientRepository = new InMemoryClientRepository()
-    sut = new CreateClientService(clientRepository)
+    sut = new DeleteClientService(clientRepository)
   })
 
-  it('should create a client', async () => {
-    const response = await sut.execute({
+  it('should delete a client', async () => {
+    const client = Client.create({
       name: 'Client Name',
       email: 'clientemail@email.com',
       managerName: 'Manager Name',
       document: '123456789',
       contacts: ['contact1', 'contact2'],
-      creatorId: 'creatorId',
+      createdBy: new EntityId('creatorId'),
     })
 
+    clientRepository.createClient(client)
+
+    const response = await sut.execute({ id: client.id.getValue() })
+
     expect(response.isRight()).toBeTruthy()
-    expect(response.value).toEqual(expect.any(Client))
-    expect(clientRepository.clients).toHaveLength(1)
+    expect(clientRepository.clients).toHaveLength(0)
   })
 })

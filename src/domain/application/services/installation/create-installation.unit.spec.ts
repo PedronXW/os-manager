@@ -1,14 +1,14 @@
 import { Client } from '@/domain/enterprise/entities/client/client'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
-import { CreateClientService } from './create-client'
+import { CreateClient } from './create-installation'
 
 describe('CreateClient', () => {
-  let sut: CreateClientService
+  let sut: CreateClient
   let clientRepository: InMemoryClientRepository
 
   beforeEach(() => {
     clientRepository = new InMemoryClientRepository()
-    sut = new CreateClientService(clientRepository)
+    sut = new CreateClient(clientRepository)
   })
 
   it('should create a client', async () => {

@@ -2,7 +2,7 @@ import { User } from '@/domain/enterprise/entities/user/user'
 import { Crypto } from '@/infra/cryptography/crypto'
 import { Encrypter } from '@/infra/cryptography/encrypter'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
-import { WrongCredentialError } from '../../errors/wrong-credentials-error'
+import { WrongCredentialsError } from '../../errors/wrong-credentials-error'
 import { AuthenticateUserService } from './authenticate-user'
 
 let sut: AuthenticateUserService
@@ -52,7 +52,7 @@ describe('AuthenticateUser', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(WrongCredentialError)
+    expect(result.value).toBeInstanceOf(WrongCredentialsError)
   })
 
   it('should be able to return a wrong credential error caused by a wrong email', async () => {
@@ -70,6 +70,6 @@ describe('AuthenticateUser', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(WrongCredentialError)
+    expect(result.value).toBeInstanceOf(WrongCredentialsError)
   })
 })

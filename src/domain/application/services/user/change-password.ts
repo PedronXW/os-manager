@@ -3,7 +3,7 @@ import { User } from '@/domain/enterprise/entities/user/user'
 import { HashComparer } from '../../criptography/hash-comparer'
 import { HashGenerator } from '../../criptography/hash-generator'
 import { UserNonExistsError } from '../../errors/user-non-exists-error'
-import { WrongCredentialError } from '../../errors/wrong-credentials-error'
+import { WrongCredentialsError } from '../../errors/wrong-credentials-error'
 import { UserRepository } from '../../repositories/user-repository'
 
 type ChangePasswordServiceResponse = Either<UserNonExistsError, User>
@@ -32,7 +32,7 @@ export class ChangePasswordService {
     )
 
     if (!passwordMatch) {
-      return left(new WrongCredentialError())
+      return left(new WrongCredentialsError())
     }
 
     const editResult = await this.userRepository.changeUserPassword(

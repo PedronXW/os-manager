@@ -2,7 +2,7 @@ import { User } from '@/domain/enterprise/entities/user/user'
 import { Crypto } from '@/infra/cryptography/crypto'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
 import { UserNonExistsError } from '../../errors/user-non-exists-error'
-import { WrongCredentialError } from '../../errors/wrong-credentials-error'
+import { WrongCredentialsError } from '../../errors/wrong-credentials-error'
 import { ChangePasswordService } from './change-password'
 
 let sut: ChangePasswordService
@@ -56,7 +56,7 @@ describe('ChangePassword', () => {
     )
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(WrongCredentialError)
+    expect(result.value).toBeInstanceOf(WrongCredentialsError)
   })
 
   it('should be able to not change a user password with a user not exists error', async () => {
