@@ -1,12 +1,17 @@
-import { Entity } from '../../../@shared/entities/entity'
-import { EntityId } from '../../../@shared/entities/entity-id'
-import { Optional } from '../../../@shared/types/optional'
+import { Entity } from '@/@shared/entities/entity'
+import { EntityId } from '@/@shared/entities/entity-id'
+import { Optional } from '@/@shared/types/optional'
+import { validateSync } from 'class-validator'
+import { EntityType } from '../../events'
+import { CreateEntityEvent } from '../../events/CreateEntityEvent'
+import { InvalidEntityCreatedEvent } from '../../events/InvalidEntityCreatedEvent'
+import { UserValidationRules } from './user-validator'
 
 type UserProps = {
   name: string
   email: string
   active: boolean
-  password?: string
+  password: string
   createdAt: Date
   updatedAt?: Date | null
   deletedAt?: Date | null
@@ -29,7 +34,7 @@ export class User extends Entity<UserProps> {
     this.props.email = email
   }
 
-  get password(): string | undefined {
+  get password(): string {
     return this.props.password
   }
 
@@ -45,7 +50,7 @@ export class User extends Entity<UserProps> {
     this.props.active = active
   }
 
-  get createdAt(): Date | null {
+  get createdAt(): Date {
     return this.props.createdAt
   }
 
@@ -76,7 +81,7 @@ export class User extends Entity<UserProps> {
     >,
     id?: EntityId,
   ): User {
-    const user = new User(
+    const newUser = new User(
       {
         ...props,
         active: props.active ?? true,
@@ -87,6 +92,24 @@ export class User extends Entity<UserProps> {
       id,
     )
 
-    return user
+    const validatedUser = new UserValidationRules(newUser)
+
+    const validationError = validateSync(validatedUser)
+
+    if (!id) {
+      newUser.addDomainEvent(new CreateEntityEvent(newUser, EntityType.USER))
+    }
+
+    if (validationError.length > 0) {
+      newUser.addDomainEvent(
+        new InvalidEntityCreatedEvent(
+          newUser,
+          EntityType.USER,
+          validationError,
+        ),
+      )
+    }
+
+    return newUser
   }
 }

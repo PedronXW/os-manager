@@ -1,6 +1,11 @@
 import { Entity } from '@/@shared/entities/entity'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Optional } from '@/@shared/types/optional'
+import { validateSync } from 'class-validator'
+import { EntityType } from '../../events'
+import { CreateEntityEvent } from '../../events/CreateEntityEvent'
+import { InvalidEntityCreatedEvent } from '../../events/InvalidEntityCreatedEvent'
+import { WorkOrderValidationRules } from './work-order-validator'
 
 type WorkOrderProps = {
   description: string
@@ -109,7 +114,7 @@ export class WorkOrder extends Entity<WorkOrderProps> {
     >,
     id?: EntityId,
   ): WorkOrder {
-    const workOrder = new WorkOrder(
+    const newWorkOrder = new WorkOrder(
       {
         createdAt: props.createdAt ?? new Date(),
         active: props.active ?? true,
@@ -118,6 +123,26 @@ export class WorkOrder extends Entity<WorkOrderProps> {
       id,
     )
 
-    return workOrder
+    const validatedWorkOrder = new WorkOrderValidationRules(newWorkOrder)
+
+    const validationError = validateSync(validatedWorkOrder)
+
+    if (!id) {
+      newWorkOrder.addDomainEvent(
+        new CreateEntityEvent(newWorkOrder, EntityType.WORK_ORDER),
+      )
+    }
+
+    if (validationError.length > 0) {
+      newWorkOrder.addDomainEvent(
+        new InvalidEntityCreatedEvent(
+          newWorkOrder,
+          EntityType.WORK_ORDER,
+          validationError,
+        ),
+      )
+    }
+
+    return newWorkOrder
   }
 }

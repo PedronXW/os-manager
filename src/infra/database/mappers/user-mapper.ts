@@ -1,5 +1,5 @@
 import { EntityId } from '@/@shared/entities/entity-id'
-import { User } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user/user'
 
 export class UserMapper {
   static toDomain(raw): User {

@@ -1,12 +1,17 @@
 import { Entity } from '@/@shared/entities/entity'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Optional } from '@/@shared/types/optional'
+import { validateSync } from 'class-validator'
+import { EntityType } from '../../events'
+import { CreateEntityEvent } from '../../events/CreateEntityEvent'
+import { InvalidEntityCreatedEvent } from '../../events/InvalidEntityCreatedEvent'
+import { InstallationValidationRules } from './installation-validator'
 
-type ClientProps = {
+type InstallationProps = {
   name: string
-  contacts: string[]
-  managerName: string
-  email: string
+  description: string
+  products: EntityId[]
+  entity: EntityId
   active: boolean
   createdAt: Date
   createdBy: EntityId
@@ -16,7 +21,7 @@ type ClientProps = {
   deletedBy?: EntityId | null
 }
 
-export class Client extends Entity<ClientProps> {
+export class Installation extends Entity<InstallationProps> {
   get name(): string {
     return this.props.name
   }
@@ -25,28 +30,28 @@ export class Client extends Entity<ClientProps> {
     this.props.name = name
   }
 
-  get contacts(): string[] {
-    return this.props.contacts
+  get description(): string {
+    return this.props.description
   }
 
-  set contacts(contacts: string[]) {
-    this.props.contacts = contacts
+  set description(description: string) {
+    this.props.description = description
   }
 
-  get managerName(): string {
-    return this.props.managerName
+  get products(): EntityId[] {
+    return this.props.products
   }
 
-  set managerName(managerName: string) {
-    this.props.managerName = managerName
+  set products(products: EntityId[]) {
+    this.props.products = products
   }
 
-  get email(): string {
-    return this.props.email
+  get entity(): EntityId {
+    return this.props.entity
   }
 
-  set email(email: string) {
-    this.props.email = email
+  set entity(entity: EntityId) {
+    this.props.entity = entity
   }
 
   get active(): boolean {
@@ -107,12 +112,12 @@ export class Client extends Entity<ClientProps> {
 
   static create(
     props: Optional<
-      ClientProps,
+      InstallationProps,
       'createdAt' | 'deletedAt' | 'deletedBy' | 'updatedAt' | 'updatedBy'
     >,
     id?: EntityId,
-  ): Client {
-    return new Client(
+  ): Installation {
+    const newInstallation = new Installation(
       {
         ...props,
         active: props.active ?? true,
@@ -120,5 +125,29 @@ export class Client extends Entity<ClientProps> {
       },
       id,
     )
+
+    const validatedInstallation = new InstallationValidationRules(
+      newInstallation,
+    )
+
+    const validationError = validateSync(validatedInstallation)
+
+    if (!id) {
+      newInstallation.addDomainEvent(
+        new CreateEntityEvent(newInstallation, EntityType.INSTALLATION),
+      )
+    }
+
+    if (validationError.length > 0) {
+      newInstallation.addDomainEvent(
+        new InvalidEntityCreatedEvent(
+          newInstallation,
+          EntityType.INSTALLATION,
+          validationError,
+        ),
+      )
+    }
+
+    return newInstallation
   }
 }

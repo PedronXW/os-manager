@@ -11,8 +11,6 @@ const envSchema = z.object({
   RESET_PASSWORD_SECRET: z.string(),
   REDIS_HOST: z.string().optional().default('redis'),
   REDIS_PORT: z.coerce.number().optional().default(6379),
-  MONGO_URL_PRODUCTION: z.string(),
-  MONGO_URL_DEVELOPMENT: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)

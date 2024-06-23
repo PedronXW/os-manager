@@ -1,5 +1,5 @@
 import { Either, left, right } from '@/@shared/either'
-import { User } from '@/domain/enterprise/entities/user'
+import { User } from '@/domain/enterprise/entities/user/user'
 import { HashGenerator } from '../../criptography/hash-generator'
 import { UserAlreadyExistsError } from '../../errors/user-already-exists-error'
 import { UserRepository } from '../../repositories/user-repository'

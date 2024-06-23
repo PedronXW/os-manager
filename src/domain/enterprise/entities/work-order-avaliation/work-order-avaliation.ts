@@ -1,9 +1,14 @@
 import { Entity } from '@/@shared/entities/entity'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Optional } from '@/@shared/types/optional'
+import { validateSync } from 'class-validator'
+import { EntityType } from '../../events'
+import { CreateEntityEvent } from '../../events/CreateEntityEvent'
+import { InvalidEntityCreatedEvent } from '../../events/InvalidEntityCreatedEvent'
+import { WorkOrderAvaliationValidationRules } from './work-order-avaliation-validator'
 
 type WorkOrderAvaliationProps = {
-  workOrderId: string
+  workOrderId: EntityId
   rating: number
   comment: string
   active: boolean
@@ -15,11 +20,11 @@ type WorkOrderAvaliationProps = {
 }
 
 export class WorkOrderAvaliation extends Entity<WorkOrderAvaliationProps> {
-  get workOrderId(): string {
+  get workOrderId(): EntityId {
     return this.props.workOrderId
   }
 
-  set workOrderId(workOrderId: string) {
+  set workOrderId(workOrderId: EntityId) {
     this.props.workOrderId = workOrderId
   }
 
@@ -55,12 +60,28 @@ export class WorkOrderAvaliation extends Entity<WorkOrderAvaliationProps> {
     this.props.updatedAt = updatedAt
   }
 
+  get updatedBy(): EntityId | null | undefined {
+    return this.props.updatedBy
+  }
+
+  set updatedBy(updatedBy: EntityId | null | undefined) {
+    this.props.updatedBy = updatedBy
+  }
+
   get deletedAt(): Date | null | undefined {
     return this.props.deletedAt
   }
 
   set deletedAt(deletedAt: Date | null | undefined) {
     this.props.deletedAt = deletedAt
+  }
+
+  get deletedBy(): EntityId | null | undefined {
+    return this.props.deletedBy
+  }
+
+  set deletedBy(deletedBy: EntityId | null | undefined) {
+    this.props.deletedBy = deletedBy
   }
 
   get active(): boolean {
@@ -83,7 +104,7 @@ export class WorkOrderAvaliation extends Entity<WorkOrderAvaliationProps> {
     >,
     id?: EntityId,
   ): WorkOrderAvaliation {
-    return new WorkOrderAvaliation(
+    const newWorkOrderAvaliation = new WorkOrderAvaliation(
       {
         ...props,
         createdAt: props.createdAt ?? new Date(),
@@ -91,5 +112,32 @@ export class WorkOrderAvaliation extends Entity<WorkOrderAvaliationProps> {
       },
       id,
     )
+
+    const validatedWorkOrderAvaliation = new WorkOrderAvaliationValidationRules(
+      newWorkOrderAvaliation,
+    )
+
+    const validationError = validateSync(validatedWorkOrderAvaliation)
+
+    if (!id) {
+      newWorkOrderAvaliation.addDomainEvent(
+        new CreateEntityEvent(
+          newWorkOrderAvaliation,
+          EntityType.WORK_ORDER_AVALIATION,
+        ),
+      )
+    }
+
+    if (validationError.length > 0) {
+      newWorkOrderAvaliation.addDomainEvent(
+        new InvalidEntityCreatedEvent(
+          newWorkOrderAvaliation,
+          EntityType.WORK_ORDER_AVALIATION,
+          validationError,
+        ),
+      )
+    }
+
+    return newWorkOrderAvaliation
   }
 }

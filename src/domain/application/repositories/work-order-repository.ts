@@ -1,4 +1,4 @@
-import { WorkOrder } from '@/domain/enterprise/entities/work-order';
+import { WorkOrder } from '@/domain/enterprise/entities/work-order/work-order';
 
 export abstract class WorkOrderRepository {
   abstract createWorkOrder(workOrder: WorkOrder): Promise<WorkOrder>
