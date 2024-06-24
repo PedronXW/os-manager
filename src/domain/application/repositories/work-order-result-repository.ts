@@ -1,4 +1,9 @@
-import { WorkOrderResult } from '@/domain/enterprise/entities/work-order-result/work-order-result';
+import { WorkOrderResult } from '@/domain/enterprise/entities/work-order-result/work-order-result'
+
+export type WorkOrderResultQueryResponse = {
+  workOrderResults: WorkOrderResult[]
+  workOrderResultsQueryCount: number
+}
 
 export abstract class WorkOrderResultRepository {
   abstract createWorkOrderResult(
@@ -14,7 +19,9 @@ export abstract class WorkOrderResultRepository {
   abstract getAllWorkOrderResults(
     page: number,
     limit: number,
-  ): Promise<WorkOrderResult[]>
+  ): Promise<WorkOrderResultQueryResponse>
 
-  abstract getWorkOrderResultById(id: string): Promise<WorkOrderResult>
+  abstract getWorkOrderResultById(
+    id: string,
+  ): Promise<WorkOrderResult | undefined>
 }

@@ -1,4 +1,9 @@
-import { Installation } from '@/domain/enterprise/entities/installation/installation';
+import { Installation } from '@/domain/enterprise/entities/installation/installation'
+
+export type InstallationQueryResponse = {
+  installations: Installation[]
+  installationsQueryCount: number
+}
 
 export abstract class InstallationRepository {
   abstract createInstallation(installation: Installation): Promise<Installation>
@@ -11,7 +16,7 @@ export abstract class InstallationRepository {
   abstract getAllInstallations(
     page: number,
     limit: number,
-  ): Promise<Installation[]>
+  ): Promise<InstallationQueryResponse>
 
-  abstract getInstallationById(id: string): Promise<Installation>
+  abstract getInstallationById(id: string): Promise<Installation | undefined>
 }

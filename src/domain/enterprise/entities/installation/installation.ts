@@ -11,7 +11,7 @@ type InstallationProps = {
   name: string
   description: string
   products: EntityId[]
-  entity: EntityId
+  client: EntityId
   active: boolean
   createdAt: Date
   createdBy: EntityId
@@ -46,12 +46,12 @@ export class Installation extends Entity<InstallationProps> {
     this.props.products = products
   }
 
-  get entity(): EntityId {
-    return this.props.entity
+  get client(): EntityId {
+    return this.props.client
   }
 
-  set entity(entity: EntityId) {
-    this.props.entity = entity
+  set client(entity: EntityId) {
+    this.props.client = entity
   }
 
   get active(): boolean {
@@ -113,7 +113,13 @@ export class Installation extends Entity<InstallationProps> {
   static create(
     props: Optional<
       InstallationProps,
-      'createdAt' | 'deletedAt' | 'deletedBy' | 'updatedAt' | 'updatedBy'
+      | 'createdAt'
+      | 'deletedAt'
+      | 'deletedBy'
+      | 'updatedAt'
+      | 'updatedBy'
+      | 'active'
+      | 'products'
     >,
     id?: EntityId,
   ): Installation {
@@ -122,6 +128,7 @@ export class Installation extends Entity<InstallationProps> {
         ...props,
         active: props.active ?? true,
         createdAt: props.createdAt ?? new Date(),
+        products: props.products ?? [],
       },
       id,
     )

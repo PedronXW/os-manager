@@ -1,28 +1,37 @@
-import { Client } from '@/domain/enterprise/entities/client/client'
+import { Installation } from '@/domain/enterprise/entities/installation/installation'
+import { makeClient } from 'test/factories/unit/client-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
-import { CreateClient } from './create-installation'
+import { InMemoryInstallationRepository } from 'test/repositories/InMemoryInstallationRepository'
+import { CreateInstallationService } from './create-installation'
 
-describe('CreateClient', () => {
-  let sut: CreateClient
+describe('CreateInstallation', () => {
+  let sut: CreateInstallationService
+  let installationRepository: InMemoryInstallationRepository
   let clientRepository: InMemoryClientRepository
 
   beforeEach(() => {
+    installationRepository = new InMemoryInstallationRepository()
     clientRepository = new InMemoryClientRepository()
-    sut = new CreateClient(clientRepository)
+    sut = new CreateInstallationService(
+      installationRepository,
+      clientRepository,
+    )
   })
 
-  it('should create a client', async () => {
+  it('should create a installation', async () => {
+    const client = makeClient({})
+
+    clientRepository.createClient(client)
+
     const response = await sut.execute({
-      name: 'Client Name',
-      email: 'clientemail@email.com',
-      managerName: 'Manager Name',
-      document: '123456789',
-      contacts: ['contact1', 'contact2'],
+      name: 'Installation Name',
+      client: client.id.getValue(),
+      description: 'arroz',
       creatorId: 'creatorId',
     })
 
     expect(response.isRight()).toBeTruthy()
-    expect(response.value).toEqual(expect.any(Client))
-    expect(clientRepository.clients).toHaveLength(1)
+    expect(response.value).toEqual(expect.any(Installation))
+    expect(installationRepository.installations).toHaveLength(1)
   })
 })

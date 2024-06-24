@@ -1,4 +1,9 @@
-import { WorkOrderAvaliation } from '@/domain/enterprise/entities/work-order-avaliation/work-order-avaliation';
+import { WorkOrderAvaliation } from '@/domain/enterprise/entities/work-order-avaliation/work-order-avaliation'
+
+export type WorkOrderAvaliationQueryResponse = {
+  workOrderAvaliations: WorkOrderAvaliation[]
+  workOrderAvaliationsQueryCount: number
+}
 
 export abstract class WorkOrderAvaliationRepository {
   abstract createWorkOrderAvaliation(
@@ -15,7 +20,9 @@ export abstract class WorkOrderAvaliationRepository {
   abstract getAllWorkOrderAvaliations(
     page: number,
     limit: number,
-  ): Promise<WorkOrderAvaliation[]>
+  ): Promise<WorkOrderAvaliationQueryResponse>
 
-  abstract getWorkOrderAvaliationById(id: string): Promise<WorkOrderAvaliation>
+  abstract getWorkOrderAvaliationById(
+    id: string,
+  ): Promise<WorkOrderAvaliation | undefined>
 }
