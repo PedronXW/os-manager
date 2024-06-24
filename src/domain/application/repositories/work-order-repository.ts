@@ -1,4 +1,9 @@
-import { WorkOrder } from '@/domain/enterprise/entities/work-order/work-order';
+import { WorkOrder } from '@/domain/enterprise/entities/work-order/work-order'
+
+export type WorkOrderQueryResponse = {
+  workOrders: WorkOrder[]
+  workOrdersQueryCount: number
+}
 
 export abstract class WorkOrderRepository {
   abstract createWorkOrder(workOrder: WorkOrder): Promise<WorkOrder>
@@ -8,6 +13,10 @@ export abstract class WorkOrderRepository {
   ): Promise<WorkOrder>
 
   abstract deleteWorkOrder(id: string): Promise<void>
-  abstract getAllWorkOrders(page: number, limit: number): Promise<WorkOrder[]>
-  abstract getWorkOrderById(id: string): Promise<WorkOrder>
+  abstract getAllWorkOrders(
+    page: number,
+    limit: number,
+  ): Promise<WorkOrderQueryResponse>
+
+  abstract getWorkOrderById(id: string): Promise<WorkOrder | undefined>
 }
