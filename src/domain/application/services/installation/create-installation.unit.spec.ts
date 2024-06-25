@@ -18,7 +18,7 @@ describe('CreateInstallation', () => {
     )
   })
 
-  it('should create a installation', async () => {
+  it('should be able to create a installation', async () => {
     const client = makeClient({})
 
     clientRepository.createClient(client)

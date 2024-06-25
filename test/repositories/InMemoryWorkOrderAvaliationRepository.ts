@@ -1,8 +1,8 @@
 import { DomainEvents } from '@/@shared/events/event-dispatcher'
 import {
-    WorkOrderAvaliationQueryResponse,
-    WorkOrderAvaliationRepository,
-} from '@/domain/application/repositories/work-order-repository'
+  WorkOrderAvaliationQueryResponse,
+  WorkOrderAvaliationRepository,
+} from '@/domain/application/repositories/work-order-avaliation-repository'
 import { WorkOrderAvaliation } from '@/domain/enterprise/entities/work-order-avaliation/work-order-avaliation'
 
 export class InMemoryWorkOrderAvaliationRepository
@@ -10,7 +10,7 @@ export class InMemoryWorkOrderAvaliationRepository
 {
   public workOrderAvaliations: WorkOrderAvaliation[] = []
 
-  async createWorkOrderAvaliationAvaliation(
+  async createWorkOrderAvaliation(
     workOrderAvaliationAvaliation: WorkOrderAvaliation,
   ): Promise<WorkOrderAvaliation> {
     this.workOrderAvaliations.push(workOrderAvaliationAvaliation)

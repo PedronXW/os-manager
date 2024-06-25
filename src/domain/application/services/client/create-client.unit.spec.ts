@@ -11,7 +11,7 @@ describe('CreateClient', () => {
     sut = new CreateClientService(clientRepository)
   })
 
-  it('should create a client', async () => {
+  it('should be able to create a client', async () => {
     const response = await sut.execute({
       name: 'Client Name',
       email: 'clientemail@email.com',

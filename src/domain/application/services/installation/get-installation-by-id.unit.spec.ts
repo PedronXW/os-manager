@@ -12,7 +12,7 @@ describe('GetInstallationById', () => {
     sut = new GetInstallationByIdService(installationRepository)
   })
 
-  it('should getall a installation', async () => {
+  it('should be able to get a installation by id', async () => {
     const installation = await makeInstallation()
 
     installationRepository.createInstallation(installation)

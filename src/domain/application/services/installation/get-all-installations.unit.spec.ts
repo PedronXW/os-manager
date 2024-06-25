@@ -11,7 +11,7 @@ describe('GetAllInstallation', () => {
     sut = new GetAllInstallationsService(installationRepository)
   })
 
-  it('should getall a installation', async () => {
+  it('should be able to get all installations', async () => {
     const installation = await makeInstallation()
 
     installationRepository.createInstallation(installation)

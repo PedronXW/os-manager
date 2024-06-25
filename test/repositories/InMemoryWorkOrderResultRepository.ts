@@ -1,8 +1,8 @@
 import { DomainEvents } from '@/@shared/events/event-dispatcher'
 import {
-    WorkOrderResultQueryResponse,
-    WorkOrderResultRepository,
-} from '@/domain/application/repositories/work-order-repository'
+  WorkOrderResultQueryResponse,
+  WorkOrderResultRepository,
+} from '@/domain/application/repositories/work-order-result-repository'
 import { WorkOrderResult } from '@/domain/enterprise/entities/work-order-result/work-order-result'
 
 export class InMemoryWorkOrderResultRepository
@@ -10,16 +10,16 @@ export class InMemoryWorkOrderResultRepository
 {
   public workOrderResults: WorkOrderResult[] = []
 
-  async createWorkOrderResultAvaliation(
-    workOrderResultAvaliation: WorkOrderResult,
+  async createWorkOrderResult(
+    workOrderResult: WorkOrderResult,
   ): Promise<WorkOrderResult> {
-    this.workOrderResults.push(workOrderResultAvaliation)
+    this.workOrderResults.push(workOrderResult)
 
-    DomainEvents.markEntityForDispatch(workOrderResultAvaliation)
+    DomainEvents.markEntityForDispatch(workOrderResult)
 
-    DomainEvents.dispatchEventsForEntity(workOrderResultAvaliation.id)
+    DomainEvents.dispatchEventsForEntity(workOrderResult.id)
 
-    return workOrderResultAvaliation
+    return workOrderResult
   }
 
   async updateWorkOrderResult(
