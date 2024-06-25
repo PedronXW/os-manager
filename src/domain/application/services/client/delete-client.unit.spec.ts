@@ -12,7 +12,7 @@ describe('DeleteClient', () => {
     sut = new DeleteClientService(clientRepository)
   })
 
-  it('should delete a client', async () => {
+  it('should be able to delete a client', async () => {
     const client = Client.create({
       name: 'Client Name',
       email: 'clientemail@email.com',

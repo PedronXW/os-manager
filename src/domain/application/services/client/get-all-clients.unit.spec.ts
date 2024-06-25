@@ -12,7 +12,7 @@ describe('GetAllClients', () => {
     sut = new GetAllClientsService(clientRepository)
   })
 
-  it('should get all clients', async () => {
+  it('should be able to get all clients', async () => {
     const client = Client.create({
       name: 'Client Name',
       email: 'clientemail@email.com',

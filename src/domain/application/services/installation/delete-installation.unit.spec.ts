@@ -11,7 +11,7 @@ describe('DeleteInstallation', () => {
     sut = new DeleteInstallationService(installationRepository)
   })
 
-  it('should delete a installation', async () => {
+  it('should be able to delete a installation', async () => {
     const installation = await makeInstallation()
 
     installationRepository.createInstallation(installation)

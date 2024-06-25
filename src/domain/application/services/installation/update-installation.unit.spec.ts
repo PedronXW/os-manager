@@ -11,7 +11,7 @@ describe('UpdateInstallation', () => {
     sut = new UpdateInstallationService(installationRepository)
   })
 
-  it('should update a installation', async () => {
+  it('should be able to update a installation', async () => {
     const installation = await makeInstallation()
 
     installationRepository.createInstallation(installation)
