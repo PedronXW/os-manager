@@ -1,18 +1,38 @@
 import { User } from '@/domain/enterprise/entities/user/user'
 import { InMemoryCacheRepository } from 'test/cache/InMemoryCacheRepository'
+import { makeUser } from 'test/factories/unit/user-factory'
 import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
 import { UserNonExistsError } from '../../errors/user-non-exists-error'
+import { Permission } from '../../permissions/permissions'
+import { UserRepository } from '../../repositories/user-repository'
+import { AuthorizationService } from '../authorization/authorization-service'
 import { DeleteUserService } from './delete-user'
 
 let sut: DeleteUserService
 let inMemoryUserRepository: InMemoryUserRepository
 let inMemoryCacheRepository: InMemoryCacheRepository
+let authorizationService: AuthorizationService
+let userRepository: UserRepository
 
 describe('DeleteUser', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     inMemoryUserRepository = new InMemoryUserRepository()
     inMemoryCacheRepository = new InMemoryCacheRepository()
-    sut = new DeleteUserService(inMemoryUserRepository, inMemoryCacheRepository)
+    userRepository = new InMemoryUserRepository()
+    const user = await userRepository.createUser(
+      makeUser({
+        permissions: [Permission.USER_DELETE],
+      }),
+    )
+    authorizationService = new AuthorizationService(
+      userRepository,
+      user.id.getValue(),
+    )
+    sut = new DeleteUserService(
+      inMemoryUserRepository,
+      inMemoryCacheRepository,
+      authorizationService,
+    )
   })
 
   it('should be able to delete a user', async () => {

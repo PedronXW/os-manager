@@ -9,6 +9,7 @@ export enum EntityType {
   WORK_ORDER,
   WORK_ORDER_AVALIATION,
   WORK_ORDER_RESULT,
+  ROLE,
 }
 
 export const setupEvents = () => {

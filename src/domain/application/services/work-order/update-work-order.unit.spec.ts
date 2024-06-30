@@ -1,14 +1,31 @@
+import { makeUser } from 'test/factories/unit/user-factory'
 import { makeWorkOrder } from 'test/factories/unit/work-order-factory'
+import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
 import { InMemoryWorkOrderRepository } from 'test/repositories/InMemoryWorkOrderRepository'
+import { Permission } from '../../permissions/permissions'
+import { UserRepository } from '../../repositories/user-repository'
+import { AuthorizationService } from '../authorization/authorization-service'
 import { UpdateWorkOrderService } from './update-work-order'
 
 describe('UpdateWorkOrder', () => {
   let sut: UpdateWorkOrderService
   let workOrderRepository: InMemoryWorkOrderRepository
+  let authorizationService: AuthorizationService
+  let userRepository: UserRepository
 
-  beforeEach(() => {
+  beforeEach(async () => {
     workOrderRepository = new InMemoryWorkOrderRepository()
-    sut = new UpdateWorkOrderService(workOrderRepository)
+    userRepository = new InMemoryUserRepository()
+    const user = await userRepository.createUser(
+      makeUser({
+        permissions: [Permission.WORK_ORDER_UPDATE],
+      }),
+    )
+    authorizationService = new AuthorizationService(
+      userRepository,
+      user.id.getValue(),
+    )
+    sut = new UpdateWorkOrderService(workOrderRepository, authorizationService)
   })
 
   it('should be able to update a work order', async () => {

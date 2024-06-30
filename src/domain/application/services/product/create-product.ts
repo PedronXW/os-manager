@@ -1,9 +1,12 @@
-import { Either, right } from '@/@shared/either'
+import { Either, left, right } from '@/@shared/either'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Product } from '@/domain/enterprise/entities/product/product'
-import { ClientNonExistsError } from '../../errors/client-non-exists-error'
-import { InactiveClientError } from '../../errors/inactive-client-error'
+import { InactiveUserError } from '../../errors/inactive-user-error'
+import { PermissionError } from '../../errors/permission-error'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
+import { Permission } from '../../permissions/permissions'
 import { ProductRepository } from '../../repositories/product-repository'
+import { AuthorizationService } from '../authorization/authorization-service'
 
 type CreateProductServiceRequest = {
   name: string
@@ -15,12 +18,15 @@ type CreateProductServiceRequest = {
 }
 
 type CreateProductServiceResponse = Either<
-  ClientNonExistsError | InactiveClientError,
+  UserNonExistsError | PermissionError | InactiveUserError,
   Product
 >
 
 export class CreateProductService {
-  constructor(private productRepository: ProductRepository) {}
+  constructor(
+    private productRepository: ProductRepository,
+    private authorizationService: AuthorizationService,
+  ) {}
 
   async execute({
     name,
@@ -30,6 +36,14 @@ export class CreateProductService {
     price,
     creatorId,
   }: CreateProductServiceRequest): Promise<CreateProductServiceResponse> {
+    const authorizationVerify = await this.authorizationService.execute({
+      necessaryRole: Permission.PRODUCT_CREATE,
+    })
+
+    if (authorizationVerify.isLeft()) {
+      return left(authorizationVerify.value)
+    }
+
     const product = Product.create({
       name,
       description,

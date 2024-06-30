@@ -1,15 +1,32 @@
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Client } from '@/domain/enterprise/entities/client/client'
+import { makeUser } from 'test/factories/unit/user-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
+import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
+import { Permission } from '../../permissions/permissions'
+import { UserRepository } from '../../repositories/user-repository'
+import { AuthorizationService } from '../authorization/authorization-service'
 import { GetAllClientsService } from './get-all-clients'
 
 describe('GetAllClients', () => {
   let sut: GetAllClientsService
   let clientRepository: InMemoryClientRepository
+  let authorizationService: AuthorizationService
+  let userRepository: UserRepository
 
-  beforeEach(() => {
+  beforeEach(async () => {
     clientRepository = new InMemoryClientRepository()
-    sut = new GetAllClientsService(clientRepository)
+    userRepository = new InMemoryUserRepository()
+    const user = await userRepository.createUser(
+      makeUser({
+        permissions: [Permission.CLIENT_GET],
+      }),
+    )
+    authorizationService = new AuthorizationService(
+      userRepository,
+      user.id.getValue(),
+    )
+    sut = new GetAllClientsService(clientRepository, authorizationService)
   })
 
   it('should be able to get all clients', async () => {
