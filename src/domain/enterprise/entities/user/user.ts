@@ -1,6 +1,7 @@
 import { Entity } from '@/@shared/entities/entity'
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Optional } from '@/@shared/types/optional'
+import { Permission } from '@/domain/application/permissions/permissions'
 import { validateSync } from 'class-validator'
 import { EntityType } from '../../events'
 import { CreateEntityEvent } from '../../events/CreateEntityEvent'
@@ -12,6 +13,7 @@ type UserProps = {
   email: string
   active: boolean
   password: string
+  permissions: Permission[]
   createdAt: Date
   updatedAt?: Date | null
   deletedAt?: Date | null
@@ -40,6 +42,14 @@ export class User extends Entity<UserProps> {
 
   set password(password: string) {
     this.props.password = password
+  }
+
+  get permissions(): Permission[] {
+    return this.props.permissions
+  }
+
+  set permissions(permissions: Permission[]) {
+    this.props.permissions = permissions
   }
 
   get active(): boolean {
@@ -77,7 +87,7 @@ export class User extends Entity<UserProps> {
   static create(
     props: Optional<
       UserProps,
-      'createdAt' | 'active' | 'deletedAt' | 'updatedAt'
+      'createdAt' | 'active' | 'deletedAt' | 'updatedAt' | 'permissions'
     >,
     id?: EntityId,
   ): User {
@@ -88,6 +98,7 @@ export class User extends Entity<UserProps> {
         createdAt: props.createdAt ?? new Date(),
         updatedAt: props.updatedAt ?? null,
         deletedAt: props.deletedAt ?? null,
+        permissions: props.permissions ?? [],
       },
       id,
     )

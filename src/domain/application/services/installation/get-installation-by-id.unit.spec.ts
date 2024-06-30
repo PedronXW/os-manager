@@ -1,15 +1,35 @@
 import { Installation } from '@/domain/enterprise/entities/installation/installation'
 import { makeInstallation } from 'test/factories/unit/installation-factory'
+import { makeUser } from 'test/factories/unit/user-factory'
 import { InMemoryInstallationRepository } from 'test/repositories/InMemoryInstallationRepository'
+import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
+import { Permission } from '../../permissions/permissions'
+import { UserRepository } from '../../repositories/user-repository'
+import { AuthorizationService } from '../authorization/authorization-service'
 import { GetInstallationByIdService } from './get-installation-by-id'
 
 describe('GetInstallationById', () => {
   let sut: GetInstallationByIdService
   let installationRepository: InMemoryInstallationRepository
+  let authorizationService: AuthorizationService
+  let userRepository: UserRepository
 
-  beforeEach(() => {
+  beforeEach(async () => {
     installationRepository = new InMemoryInstallationRepository()
-    sut = new GetInstallationByIdService(installationRepository)
+    userRepository = new InMemoryUserRepository()
+    const user = await userRepository.createUser(
+      makeUser({
+        permissions: [Permission.INSTALLATION_GET],
+      }),
+    )
+    authorizationService = new AuthorizationService(
+      userRepository,
+      user.id.getValue(),
+    )
+    sut = new GetInstallationByIdService(
+      installationRepository,
+      authorizationService,
+    )
   })
 
   it('should be able to get a installation by id', async () => {

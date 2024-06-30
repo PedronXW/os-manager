@@ -1,14 +1,34 @@
 import { makeInstallation } from 'test/factories/unit/installation-factory'
+import { makeUser } from 'test/factories/unit/user-factory'
 import { InMemoryInstallationRepository } from 'test/repositories/InMemoryInstallationRepository'
+import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
+import { Permission } from '../../permissions/permissions'
+import { UserRepository } from '../../repositories/user-repository'
+import { AuthorizationService } from '../authorization/authorization-service'
 import { DeleteInstallationService } from './delete-installation'
 
 describe('DeleteInstallation', () => {
   let sut: DeleteInstallationService
   let installationRepository: InMemoryInstallationRepository
+  let authorizationService: AuthorizationService
+  let userRepository: UserRepository
 
-  beforeEach(() => {
+  beforeEach(async () => {
     installationRepository = new InMemoryInstallationRepository()
-    sut = new DeleteInstallationService(installationRepository)
+    userRepository = new InMemoryUserRepository()
+    const user = await userRepository.createUser(
+      makeUser({
+        permissions: [Permission.INSTALLATION_DELETE],
+      }),
+    )
+    authorizationService = new AuthorizationService(
+      userRepository,
+      user.id.getValue(),
+    )
+    sut = new DeleteInstallationService(
+      installationRepository,
+      authorizationService,
+    )
   })
 
   it('should be able to delete a installation', async () => {

@@ -1,15 +1,32 @@
 import { EntityId } from '@/@shared/entities/entity-id'
 import { Client } from '@/domain/enterprise/entities/client/client'
+import { makeUser } from 'test/factories/unit/user-factory'
 import { InMemoryClientRepository } from 'test/repositories/InMemoryClientRepository'
+import { InMemoryUserRepository } from 'test/repositories/InMemoryUserRepository'
+import { Permission } from '../../permissions/permissions'
+import { UserRepository } from '../../repositories/user-repository'
+import { AuthorizationService } from '../authorization/authorization-service'
 import { UpdateClientService } from './update-client'
 
 describe('UpdateClient', () => {
   let sut: UpdateClientService
   let clientRepository: InMemoryClientRepository
+  let authorizationService: AuthorizationService
+  let userRepository: UserRepository
 
-  beforeEach(() => {
+  beforeEach(async () => {
     clientRepository = new InMemoryClientRepository()
-    sut = new UpdateClientService(clientRepository)
+    userRepository = new InMemoryUserRepository()
+    const user = await userRepository.createUser(
+      makeUser({
+        permissions: [Permission.CLIENT_UPDATE],
+      }),
+    )
+    authorizationService = new AuthorizationService(
+      userRepository,
+      user.id.getValue(),
+    )
+    sut = new UpdateClientService(clientRepository, authorizationService)
   })
 
   it('should be able to update a client', async () => {

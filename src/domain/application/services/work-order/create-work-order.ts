@@ -4,9 +4,14 @@ import { WorkOrder } from '@/domain/enterprise/entities/work-order/work-order'
 import { ClientNonExistsError } from '../../errors/client-non-exists-error'
 import { InactiveClientError } from '../../errors/inactive-client-error'
 import { InactiveInstallationError } from '../../errors/inactive-installation-error'
+import { InactiveUserError } from '../../errors/inactive-user-error'
 import { InstallationNonExistsError } from '../../errors/installation-non-exists-error'
+import { PermissionError } from '../../errors/permission-error'
+import { UserNonExistsError } from '../../errors/user-non-exists-error'
+import { Permission } from '../../permissions/permissions'
 import { InstallationRepository } from '../../repositories/installation-repository'
 import { WorkOrderRepository } from '../../repositories/work-order-repository'
+import { AuthorizationService } from '../authorization/authorization-service'
 
 type CreateWorkOrderServiceRequest = {
   installation: string
@@ -15,7 +20,11 @@ type CreateWorkOrderServiceRequest = {
 }
 
 type CreateWorkOrderServiceResponse = Either<
-  ClientNonExistsError | InactiveClientError,
+  | ClientNonExistsError
+  | InactiveClientError
+  | UserNonExistsError
+  | PermissionError
+  | InactiveUserError,
   WorkOrder
 >
 
@@ -23,6 +32,7 @@ export class CreateWorkOrderService {
   constructor(
     private workOrderRepository: WorkOrderRepository,
     private installationRepository: InstallationRepository,
+    private authorizationService: AuthorizationService,
   ) {}
 
   async execute({
@@ -30,6 +40,14 @@ export class CreateWorkOrderService {
     installation,
     creatorId,
   }: CreateWorkOrderServiceRequest): Promise<CreateWorkOrderServiceResponse> {
+    const authorizationVerify = await this.authorizationService.execute({
+      necessaryRole: Permission.WORK_ORDER_CREATE,
+    })
+
+    if (authorizationVerify.isLeft()) {
+      return left(authorizationVerify.value)
+    }
+
     const verifyInstallation =
       await this.installationRepository.getInstallationById(installation)
 
